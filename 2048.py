@@ -160,31 +160,41 @@ class NumberCube:
 
 def keydown(key):
     global cubes
-    if pygame.key.name(key) == "left":
-        for cube in list(cubes):
-            cube.move([-1, 0])
-        cubes = create_new_cube(cubes)
-
-    if pygame.key.name(key) == "right":
-        for cube in list(cubes):
-            cube.move([1, 0])
-        cubes = create_new_cube(cubes)
-
-    if pygame.key.name(key) == "up":
-        for cube in list(cubes):
-            cube.move([0, -1])
-        cubes = create_new_cube(cubes)
-
-    if pygame.key.name(key) == "down":
-        for cube in list(cubes):
-            cube.move([0, 1])
-        cubes = create_new_cube(cubes)
-
     if pygame.key.name(key) == "space":
         if gameplay.game_playing():
             gameplay.end_game()
         elif not gameplay.game_playing():
             gameplay.start_game()
+
+    if pygame.key.name(key) == "left" and gameplay.game_playing():
+        sorted_cubelist = sorted(list(cubes), 
+                                 key=lambda cube : cube.get_pos()[0] + cube.get_pos()[1] * 4)
+        for cube in sorted_cubelist:
+            cube.move([-1, 0])
+        cubes = create_new_cube(cubes)
+
+    if pygame.key.name(key) == "right" and gameplay.game_playing():
+        sorted_cubelist = sorted(list(cubes), 
+                                 key=lambda cube : cube.get_pos()[0] + cube.get_pos()[1] * 4,
+                                 reverse=True)
+        for cube in sorted_cubelist:
+            cube.move([1, 0])
+        cubes = create_new_cube(cubes)
+
+    if pygame.key.name(key) == "up" and gameplay.game_playing():
+        sorted_cubelist = sorted(list(cubes), 
+                                 key=lambda cube : cube.get_pos()[0] + cube.get_pos()[1] * 4)
+        for cube in sorted_cubelist:
+            cube.move([0, -1])
+        cubes = create_new_cube(cubes)
+
+    if pygame.key.name(key) == "down" and gameplay.game_playing():
+        sorted_cubelist = sorted(list(cubes), 
+                                 key=lambda cube : cube.get_pos()[0] + cube.get_pos()[1] * 4,
+                                 reverse=True)
+        for cube in sorted_cubelist:
+            cube.move([0, 1])
+        cubes = create_new_cube(cubes)
 
 
 
@@ -252,7 +262,7 @@ def main():
             canvas.blit(num_cero, (120, 103))
             canvas.blit(num_cuatro, (220, 156))
             canvas.blit(num_ocho, (320, 125))
-            canvas.blit(my_sign, (50, 30))
+            canvas.blit(my_sign, (48, 30))
             canvas.blit(toast, (50, 350))
 
         else:
