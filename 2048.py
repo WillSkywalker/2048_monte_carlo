@@ -20,10 +20,24 @@ white = (255, 255, 255)
 FPS = 60
 
 
+def openFile():
+    global scoreFile, scoreList
+    try:
+        scoreFile = file("highscore.txt", "r+")
+        scoreList = [0]
+        for line in scoreFile:
+            scoreList.append(int(line))
+    except IOError:
+        scoreFile = file("highscore.txt", "w")
+        scoreList = [0]
+
+
 class Gameplay:
     def __init__(self):
+        openFile()
         self.maplist = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
         self.score = 0
+        self.highscore = max(scoreList)
         self.on_play = False
 
     def get_maplist(self):
@@ -31,6 +45,9 @@ class Gameplay:
 
     def get_score(self):
         return self.score
+
+    def get_highscore(self):
+        return self.highscore
 
     def game_playing(self):
         return self.on_play
@@ -41,6 +58,9 @@ class Gameplay:
     def end_game(self):
         global cubes
         self.on_play = False
+        scoreFile.write(str(self.score) + "\n")
+        if self.score >= self.highscore:
+            self.highscore = self.score
         self.score = 0
         self.maplist = [[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]
         cubes = set([])
@@ -160,6 +180,7 @@ class NumberCube:
 
 def keydown(key):
     global cubes
+    # move_sound.play()
     if pygame.key.name(key) == "space":
         if gameplay.game_playing():
             gameplay.end_game()
@@ -210,7 +231,7 @@ def create_new_cube(cubes):
                 cubes.add(new_cube)
                 break
             except ValueError:
-                    continue
+                continue
     else: 
         new_cube = NumberCube(new_pos)
         cubes.add(new_cube)
@@ -219,7 +240,7 @@ def create_new_cube(cubes):
 
 
 def main():
-    global canvas, cubes, font_numbers, font_numbers_med, font_numbers_small, maplist
+    global canvas, cubes, font_numbers, font_numbers_med, font_numbers_small, maplist, move_sound
     pygame.init()
     canvas = pygame.display.set_mode((400, 420))
     font_numbers = pygame.font.Font("SketchRockwell_Bold.ttf", 96)
@@ -227,6 +248,7 @@ def main():
     font_numbers_small = pygame.font.Font("SketchRockwell_Bold.ttf", 48)
     font_numbers_text = pygame.font.Font("SketchRockwell_Bold.ttf", 24)
     font_toast = pygame.font.Font("Secrcode.ttf", 20)
+    # move_sound = pygame.mixer.Sound("missile.ogg")
     temp_scr = 0
 
     pygame.display.set_caption("2048")
@@ -272,7 +294,9 @@ def main():
             gameplay.update_score(temp_scr)
             temp_scr = 0
             scoretoast = font_toast.render("Your score: "+str(gameplay.get_score()), False, [0,0,0])
+            highScoreToast = font_toast.render("High score: "+str(gameplay.get_highscore()), False, [0,0,0])
             canvas.blit(scoretoast, (10, 400))
+            canvas.blit(highScoreToast, (220, 400))
 
         pygame.display.update()
         FPSCLOCK.tick(FPS)
