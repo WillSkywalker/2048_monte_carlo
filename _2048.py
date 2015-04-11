@@ -28,6 +28,7 @@ class Gameplay:
     def __init__(self, grid_height=4, grid_width=4):
         self._grid_height = grid_height
         self._grid_width = grid_width
+        self.state = True
         self.reset()
 
     def reset(self):
@@ -47,6 +48,9 @@ class Gameplay:
 
     def get_grid_width(self):
         return self._grid_width
+
+    def get_state(self):
+        return self.state
 
     def get_score(self):
         score = 0
@@ -75,10 +79,13 @@ class Gameplay:
         else:
             for row in range(self._grid_height):
                 new_grid[row] = merge(self._grid[row], reverse=(OFFSETS[direction][1]<0))
-
-        self._grid = new_grid
-        self.new_tile()
-
+        if not self._grid == new_grid:
+            self._grid = new_grid
+            self.new_tile()
+            return True
+        else:
+            self.check_state()
+            return False
 
     def new_tile(self):
         blank_list = list()
@@ -92,6 +99,15 @@ class Gameplay:
                 self._grid[blank_pos[0]][blank_pos[1]] = 2
             else:
                 self._grid[blank_pos[0]][blank_pos[1]] = 4
+        else:
+            self.state = False
+
+    def check_state(self):
+        for row in self._grid:
+            for num in row:
+                if num == 0:
+                    return True
+        self.state = False
 
     def set_tile(self, row, col, value):
         self._grid[row][col] = value
@@ -99,6 +115,15 @@ class Gameplay:
     def get_tile(self, row, col):
         # replace with your code
         return self._grid[row][col]
+
+    def set_grid(self, grid):
+        self._grid = grid
+
+    def clone(self):
+        new_clone = Gameplay(self._grid_height, self._grid_width)
+        new_clone.set_grid(self._grid)
+        return new_clone
+
 
 
 # poc_2048_gui.run_gui(TwentyFortyEight(5, 4))
