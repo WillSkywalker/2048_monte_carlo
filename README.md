@@ -1,4 +1,5 @@
-2048_pygame
+2048 Monte-Carlo
 ===========
 
-A 2048 game implemented with Pygame. Still there're many bugs left to be fixed.
+Use Monte-Carlo method to find the best strategy for 2048.
+Implimented with Tkinter.
