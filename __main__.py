@@ -33,19 +33,6 @@ colors = ['#33B5E5',
           '#669900',
           '#FF8800',
           '#CC0000']
-FPS = 60
-
-
-def openFile(score):
-    try:
-        scoreFile = file("highscore.txt", "r+")
-        scoreList = [0]
-        for line in scoreFile:
-            scoreList.append(int(line))
-    except IOError:
-        scoreFile = file("highscore.txt", "w")
-        scoreList = [0]
-
 
 
 
@@ -131,13 +118,20 @@ def main():
 
     def find_best(key=None):
         best = monte_carlo.monte_carlo(gameplay)
-        popup = Toplevel()
-        popup.config(width=300, height=150)
-        popup.title("Recommendation")
-        msg = Message(popup, text='Computed Best Strategy: '+best).pack()
-        # popup.bind(sequence='<KeyPress-Return>', func=popup.destroy)
-        button = Button(popup, text="Got It!", command=popup.destroy)
-        button.pack()
+        if best:
+            popup = Toplevel()
+            popup.title("Recommendation")
+            msg = Message(popup, text='Computed Best Strategy: '+best).pack()
+            # popup.bind(sequence='<KeyPress-Return>', func=popup.destroy)
+            button = Button(popup, text="Got It!", command=popup.destroy)
+            button.pack()
+        else:
+            popup = Toplevel()
+            popup.title("Lose")
+            msg = Message(popup, text='You\'ve lost!').pack()
+            button = Button(popup, text="OK", command=popup.destroy)
+            button.pack()
+
 
 
     game_button = Button(root, text='New Game', command=start_new_game)

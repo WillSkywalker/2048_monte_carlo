@@ -8,6 +8,19 @@ OFFSETS = {'UP': (1, 0),
            'LEFT': (0, 1),
            'RIGHT': (0, -1)}
 
+
+
+def openFile(score):
+    try:
+        scoreFile = file("highscore.txt", "r+")
+        scoreList = [0]
+        for line in scoreFile:
+            scoreList.append(int(line))
+    except IOError:
+        scoreFile = file("highscore.txt", "w")
+        scoreList = [0]
+
+
 def merge(line, reverse=False):
     target = line[:]
     if reverse:
@@ -108,6 +121,9 @@ class Gameplay:
                 if num == 0:
                     return True
         self.state = False
+
+    def get_state(self):
+        return self.state
 
     def set_tile(self, row, col, value):
         self._grid[row][col] = value

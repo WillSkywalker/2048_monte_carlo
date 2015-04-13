@@ -26,17 +26,25 @@ def score_sum(game,direction):
     return score
 
 def monte_carlo(game):
-    scores = []
+    scores = {}
     biggest = 0
-    for direction in DIRECTIONS:
+    directions = list(DIRECTIONS)
+    for d in DIRECTIONS:
+        test = game.clone()
+        if not test.move(d):
+            directions.remove(d)
+    for direction in directions:
         temp = game.clone()
         score = score_sum(temp, direction)
         if score > biggest:
             biggest = score
-        scores.append(score)
+            best = direction
+        scores[direction] = score
     print scores
-    return DIRECTIONS[scores.index(biggest)]
-
+    if len(set(scores)) == 1:
+        return False
+    else:
+        return best
 
 if __name__ == '__main__':
     a_game = _2048.Gameplay()
