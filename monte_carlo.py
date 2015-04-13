@@ -1,4 +1,4 @@
-"""Algorithm for simulate a 2048 game using Monte-Carlo method."""
+"""Algorithm for simulating a 2048 game using Monte-Carlo method."""
 
 import random, _2048
 
