@@ -28,6 +28,7 @@ def score_sum(game,direction):
 def monte_carlo(game):
     scores = {}
     biggest = 0
+    best = None
     directions = list(DIRECTIONS)
     for d in DIRECTIONS:
         test = game.clone()
